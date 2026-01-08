@@ -1,0 +1,23 @@
+Checks: >
+  clang-analyzer-*,
+  bugprone-*,
+  readability-braces-around-statements,
+  readability-implicit-bool-conversion,
+  readability-suspicious-call-argument,
+  -modernize-*,
+  -cppcoreguidelines-*,
+  -performance-*,
+  -portability-*
+
+WarningsAsErrors: '*'
+
+HeaderFilterRegex: 'src/.*'
+
+CheckOptions:
+  - key: readability-braces-around-statements.ShortStatementLines
+    value: '1'
+  - key: bugprone-sizeof-expression.WarnOnSizeofConstant
+    value: 'true'
+  - key: bugprone-suspicious-memset-usage.MaxSize
+    value: '4096'
+

@@ -1,0 +1,11 @@
+BasedOnStyle: LLVM
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+BinPackArguments: false
+BinPackParameters: false
+IndentWidth: 4
+PointerAlignment: Left
+SpaceAfterCStyleCast: true
+TabWidth: 4
+InsertNewlineAtEOF: true
+
