@@ -1,4 +1,4 @@
-CC      := gcc
+CC      := clang
 STD     := -std=c11
 WARN    := -Wall -Wextra -Werror -Wreturn-type
 INC_DIR := include
