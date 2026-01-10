@@ -1,8 +1,9 @@
 CC      := gcc
 STD     := -std=c11
 WARN    := -Wall -Wextra -Werror -Wreturn-type
+INC_DIR := include
 
-CFLAGS  := $(STD) $(WARN)
+CFLAGS  := $(STD) $(WARN) -I$(INC_DIR)
 LDFLAGS :=
 
 SAN_FLAGS := -fsanitize=address,undefined -fno-omit-frame-pointer -g
@@ -43,7 +44,7 @@ check-format:
 check-tidy:
 	clang-tidy $(SRCS) \
 		--warnings-as-errors='*' \
-		-- -std=c11 -Wall -Wextra
+		-- -std=c11 -Wall -Wextra -Iinclude
 
 check-cppcheck:
 	cppcheck \
@@ -51,5 +52,18 @@ check-cppcheck:
 		--std=c11 \
 		--enable=warning,style \
 		--error-exitcode=1 \
+		-I include \
 		$(SRC_DIR)
+
+help:
+	@echo "Targets disponíveis:"
+	@echo "  make                   - Compila o projeto"
+	@echo "  make clean             - Remove arquivos gerados"
+	@echo "  make sanitize          - Compila com sanitizers (ASan/UBSan)"
+	@echo "  make format-fix        - Aplica clang-format"
+	@echo "  make check             - Executa checks (format, tidy, cppcheck)"
+	@echo "  make check-format      - Executa check clang-format"
+	@echo "  make check-tidy        - Executa check clang-tidy"
+	@echo "  make check-cppcheck    - Executa check cppcheck"
+	@echo "  make help              - Exibe este menu"
 
