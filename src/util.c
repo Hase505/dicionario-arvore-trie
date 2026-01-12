@@ -55,6 +55,7 @@ void trim(char* str) {
 
     // Copiar resultado para o início da string
     if (str != inicio) {
+        // NOLINTNEXTLINE(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
         memmove(str, inicio, fim - inicio + 2); // +2 pra incluir '\0'
     }
 }
