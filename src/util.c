@@ -64,7 +64,7 @@ void trim(char* str) {
  * Implementação:
  * - Utiliza a função 'tolower' em todos os caracteres.
  */
-void string_to_lower(char* s) {
+void string_para_minusculo(char* s) {
     if (!s) {
         return;
     }
