@@ -24,4 +24,11 @@ int palavra_valida(const char* str);
  */
 void trim(char* str);
 
+/*
+ * @brief Converte a string para minúsculo.
+ *
+ * @param str String a ser convertida.
+ */
+void string_para_minusculo(char* str);
+
 #endif

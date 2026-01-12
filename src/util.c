@@ -58,3 +58,17 @@ void trim(char* str) {
         memmove(str, inicio, fim - inicio + 2); // +2 pra incluir '\0'
     }
 }
+
+/*
+ * Implementação:
+ * - Utiliza a função 'tolower' em todos os caracteres.
+ */
+void string_to_lower(char* s) {
+    if (!s) {
+        return;
+    }
+
+    for (; *s; s++) {
+        *s = (char) tolower((unsigned char) *s);
+    }
+}
