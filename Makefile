@@ -52,6 +52,7 @@ check-cppcheck:
 		--std=c11 \
 		--enable=warning,style \
 		--error-exitcode=1 \
+		--inline-suppr \
 		-I include \
 		$(SRC_DIR)
 
