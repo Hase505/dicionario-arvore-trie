@@ -6,6 +6,7 @@
 #include "util.h"
 
 #include <ctype.h>
+#include <stdlib.h>
 #include <string.h>
 
 /*
@@ -72,4 +73,20 @@ void string_para_minusculo(char* s) {
     for (; *s; s++) {
         *s = (char) tolower((unsigned char) *s);
     }
+}
+
+/*
+ * Implementação:
+ * - Realiza a cópia caractere a caractere da string.
+ * - Retorna nova string criada.
+ * - String deve ser liberada com free por quem chamou.
+ */
+char* string_dup(const char* s) {
+    size_t len = strlen(s) + 1;
+    char* d = malloc(len);
+    if (d) {
+        // NOLINTNEXTLINE(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
+        memcpy(d, s, len);
+    }
+    return d;
 }
