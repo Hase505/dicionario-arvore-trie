@@ -7,6 +7,7 @@
  */
 
 #include <stdbool.h>
+#include <stdlib.h>
 
 /**
  * @struct no_trie
@@ -57,5 +58,27 @@ void trie_destruir(no_trie* raiz);
  * @param palavra String a ser inserida na Trie.
  */
 void trie_inserir(no_trie* raiz, const char* palavra);
+
+/*
+ * @brief Lista todas as palavras contidas na Trie informada.
+ *
+ * Obtém um array de todas as palavras da Trie, em ordem
+ * lexicográfica. Indica a quantidade de palavras encontradas.
+ * O array de strings retornado deve ser liberado com trie_liberar_lista.
+ *
+ * @param raiz Ponteiro para a raiz da Trie.
+ * @param quantidade Ponteiro para indicar quantidade de palavras encontradas.
+ *
+ * @return Array de palavras encontradas.
+ */
+char** trie_listar_palavras(no_trie* raiz, size_t* quantidade);
+
+/*
+ * @brief Libera o array de palavras informado.
+ *
+ * @param palavras Array de palavras a ser liberado.
+ * @param n Quantidade de palavras existentes no array.
+ */
+void trie_liberar_lista(char** palavras, size_t n);
 
 #endif
