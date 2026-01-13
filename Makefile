@@ -53,6 +53,7 @@ check-cppcheck:
 		--enable=warning,style \
 		--error-exitcode=1 \
 		--inline-suppr \
+		--suppress=normalCheckLevelMaxBranches \
 		-I include \
 		$(SRC_DIR)
 
