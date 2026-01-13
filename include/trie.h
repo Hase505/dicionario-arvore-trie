@@ -47,4 +47,15 @@ no_trie* trie_criar();
  */
 void trie_destruir(no_trie* raiz);
 
+/*
+ * @brief Insere palavra na Trie.
+ *
+ * Assume raiz como nó sentinela e começa a inserir a partir
+ * do no_meio da raiz.
+ *
+ * @param raiz Ponteiro para a raiz da Trie.
+ * @param palavra String a ser inserida na Trie.
+ */
+void trie_inserir(no_trie* raiz, const char* palavra);
+
 #endif
