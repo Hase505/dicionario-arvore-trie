@@ -313,3 +313,75 @@ void trie_liberar_lista(char** palavras, size_t n) {
 
     free((void*) palavras);
 }
+
+**
+ * @brief Verifica se um nó é candidato a ser removido da memória.
+ *
+ * Função auxiliar interna. Um nó é considerado "removível" ou "livre" se:
+ * 1. Não é um nó terminal (não marca o fim de uma palavra).
+ * 2. Não possui nenhum filho (esquerdo, meio ou direito).
+ *
+ * @param no Ponteiro para o nó a ser verificado.
+ * @return true Se o nó puder ser liberado (free).
+ * @return false Se o nó ainda for necessário na estrutura.
+ */
+static bool no_eh_removivel(no_trie* no) {
+    if (no == NULL)
+        return false;
+
+    return (no->terminal == false && no->no_esquerdo == NULL &&
+            no->no_meio == NULL && no->no_direito == NULL);
+}
+
+/**
+ * @brief Função interna recursiva para remover uma palavra.
+ *
+ * Realiza a remoção em duas etapas:
+ * 1. **Navegação (Descida):** Busca o nó correspondente ao final da palavra.
+ * Se encontrado, desmarca o flag `terminal`.
+ * 2. **Limpeza (Subida/Pruning):** Ao retornar da recursão, verifica se o nó
+ * atual se tornou inútil (sem filhos e não terminal) e o libera da memória.
+ *
+ * @param raiz Ponteiro para a raiz da subárvore atual.
+ * @param palavra Ponteiro para o caractere atual da string sendo buscada.
+ * @return no_trie* O ponteiro atualizado para a subárvore (retorna NULL se o nó
+ * for removido).
+ */
+static no_trie* trie_remover_rec(no_trie* raiz, const char* palavra) {
+    if (raiz == NULL) {
+        return NULL;
+    }
+    if (*palavra < raiz->caractere) {
+        raiz->no_esquerdo = trie_remover_rec(raiz->no_esquerdo, palavra);
+    } else if (*palavra > raiz->caractere) {
+        raiz->no_direito = trie_remover_rec(raiz->no_direito, palavra);
+    } else {
+        if (*(palavra + 1) == '\0') {
+            raiz->terminal = false;
+        } else {
+            raiz->no_meio = trie_remover_rec(raiz->no_meio, palavra + 1);
+        }
+    }
+    if (no_eh_removivel(raiz)) {
+        free(raiz);
+        return NULL;
+    }
+
+    return raiz;
+}
+/**
+ * @brief Remove uma palavra da Trie Ternária.
+ * * Esta é a função pública da API. Ela atua como um wrapper para a função
+ * recursiva interna, lidando com a especificidade do nó sentinela.
+ * * @note A implementação assume que a `raiz` passada é um nó sentinela
+ * (dummy node) e que a árvore real começa no filho do meio (`no_meio`).
+ *
+ * @param raiz Ponteiro para a raiz (sentinela) da Trie.
+ * @param palavra String contendo a palavra a ser removida.
+ */
+void trie_remover(no_trie* raiz, const char* palavra) {
+    if (!raiz || !palavra || !*palavra) {
+        return;
+    }
+    raiz->no_meio = trie_remover_rec(raiz->no_meio, palavra);
+}

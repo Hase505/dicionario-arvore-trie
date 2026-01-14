@@ -95,4 +95,16 @@ trie_buscar_por_prefixo(no_trie* raiz, const char* prefixo, size_t* quantidade);
  */
 void trie_liberar_lista(char** palavras, size_t n);
 
+/**
+ * @brief Remove uma palavra da Trie Ternária.
+ * * Esta é a função pública da API. Ela atua como um wrapper para a função
+ * recursiva interna, lidando com a especificidade do nó sentinela.
+ * * @note A implementação assume que a `raiz` passada é um nó sentinela
+ * (dummy node) e que a árvore real começa no filho do meio (`no_meio`).
+ *
+ * @param raiz Ponteiro para a raiz (sentinela) da Trie.
+ * @param palavra String contendo a palavra a ser removida.
+ */
+void trie_remover(no_trie* raiz, const char* palavra);
+
 #endif
