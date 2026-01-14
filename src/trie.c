@@ -314,7 +314,7 @@ void trie_liberar_lista(char** palavras, size_t n) {
     free((void*) palavras);
 }
 
-**
+/**
  * @brief Verifica se um nó é candidato a ser removido da memória.
  *
  * Função auxiliar interna. Um nó é considerado "removível" ou "livre" se:
@@ -325,9 +325,10 @@ void trie_liberar_lista(char** palavras, size_t n) {
  * @return true Se o nó puder ser liberado (free).
  * @return false Se o nó ainda for necessário na estrutura.
  */
-static bool no_eh_removivel(no_trie* no) {
-    if (no == NULL)
+static bool no_eh_removivel(const no_trie* no) {
+    if (no == NULL) {
         return false;
+    }
 
     return (no->terminal == false && no->no_esquerdo == NULL &&
             no->no_meio == NULL && no->no_direito == NULL);
