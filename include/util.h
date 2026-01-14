@@ -31,4 +31,13 @@ void trim(char* str);
  */
 void string_para_minusculo(char* str);
 
+/*
+ * @brief Duplica string informada e retorna cópia
+ *
+ * @param s String a ser duplicada.
+ *
+ * @return String duplicada.
+ */
+char* string_dup(const char* s);
+
 #endif
