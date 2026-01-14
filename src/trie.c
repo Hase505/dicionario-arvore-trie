@@ -9,6 +9,7 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * @struct lista_palavras
@@ -229,6 +230,70 @@ char** trie_listar_palavras(no_trie* raiz, size_t* quantidade) {
 
     free(buffer);
 
+    *quantidade = lista.tamanho;
+    return lista.palavras;
+}
+
+/*
+ * Implementação:
+ * - Navega pela trie até consumir todo o prefixo.
+ * - Se o prefixo não existir, retorna NULL e quantidade = 0.
+ * - A partir do nó correspondente ao último caractere do prefixo,
+ *   coleta todas as palavras descendentes.
+ * - Inclui o próprio prefixo se ele for terminal.
+ */
+char** trie_buscar_por_prefixo(no_trie* raiz,
+                               const char* prefixo,
+                               size_t* quantidade) {
+    if (!raiz || !prefixo || !*prefixo || !quantidade) {
+        return NULL;
+    }
+
+    no_trie* atual = raiz->no_meio;
+    const char* p = prefixo;
+
+    while (atual && *p) {
+        if (*p < atual->caractere) {
+            atual = atual->no_esquerdo;
+        } else if (*p > atual->caractere) {
+            atual = atual->no_direito;
+        } else {
+            p++;
+            if (*p) {
+                atual = atual->no_meio;
+            }
+        }
+    }
+
+    if (!atual) {
+        *quantidade = 0;
+        return NULL;
+    }
+
+    lista_palavras lista = {0};
+    char* buffer = NULL;
+    size_t cap = 0;
+    size_t len = strlen(prefixo);
+
+    if (!garantir_tamanho_buffer(&buffer, &cap, len + 1)) {
+        return NULL;
+    }
+
+    // NOLINTNEXTLINE(clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling)
+    memcpy(buffer, prefixo, len);
+    buffer[len] = '\0';
+
+    if (atual->terminal) {
+        lista_push(&lista, buffer);
+    }
+
+    if (!tst_coletar(atual->no_meio, &buffer, &cap, len, &lista)) {
+        free(buffer);
+        trie_liberar_lista(lista.palavras, lista.tamanho);
+        return NULL;
+    }
+
+    free(buffer);
     *quantidade = lista.tamanho;
     return lista.palavras;
 }

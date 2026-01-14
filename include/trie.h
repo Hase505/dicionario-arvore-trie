@@ -74,6 +74,20 @@ void trie_inserir(no_trie* raiz, const char* palavra);
 char** trie_listar_palavras(no_trie* raiz, size_t* quantidade);
 
 /*
+ * @brief Realiza busca por prefixo na Trie.
+ *
+ * Retorna todas as palavras que contém o prefixo informado.
+ *
+ * @param raiz Ponteiro para a raiz da Trie.
+ * @param prefixo String do prefixo.
+ * @param quantidade Ponteiro para indicar quantidade de palavras encontradas.
+ *
+ * @return Array de palavras encontradas.
+ */
+char**
+trie_buscar_por_prefixo(no_trie* raiz, const char* prefixo, size_t* quantidade);
+
+/*
  * @brief Libera o array de palavras informado.
  *
  * @param palavras Array de palavras a ser liberado.
