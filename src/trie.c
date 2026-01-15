@@ -163,6 +163,51 @@ static no_trie* trie_inserir_rec(no_trie* no, const char* palavra) {
 
 /*
  * Implementação:
+ * - Um nó é considerado removível se:
+ *   - Não marca fim de palavra.
+ *   - Não possui filhos.
+ * - Usado exclusivamente durante a fase de poda na remoção.
+ */
+static bool no_eh_removivel(const no_trie* no) {
+    if (no == NULL) {
+        return false;
+    }
+
+    return (no->terminal == false && no->no_esquerdo == NULL &&
+            no->no_meio == NULL && no->no_direito == NULL);
+}
+
+/*
+ * Implementação:
+ * - Percorre a árvore comparando o caractere atual.
+ * - Ao atingir o fim da palavra, desmarca o flag terminal.
+ * - Na subida da recursão, remove nós inúteis (poda).
+ * - Retorna o ponteiro atualizado da subárvore.
+ */
+static no_trie* trie_remover_rec(no_trie* raiz, const char* palavra) {
+    if (raiz == NULL) {
+        return NULL;
+    }
+    if (*palavra < raiz->caractere) {
+        raiz->no_esquerdo = trie_remover_rec(raiz->no_esquerdo, palavra);
+    } else if (*palavra > raiz->caractere) {
+        raiz->no_direito = trie_remover_rec(raiz->no_direito, palavra);
+    } else {
+        if (*(palavra + 1) == '\0') {
+            raiz->terminal = false;
+        } else {
+            raiz->no_meio = trie_remover_rec(raiz->no_meio, palavra + 1);
+        }
+    }
+    if (no_eh_removivel(raiz)) {
+        free(raiz);
+        return NULL;
+    }
+
+    return raiz;
+}
+/*
+ * Implementação:
  * - Usa calloc para garantir inicialização zero de todos os campos,
  *   evitando lixo em ponteiros e no flag terminal.
  * - Retorna apenas o nó raiz; a estrutura cresce sob demanda.
@@ -312,4 +357,18 @@ void trie_liberar_lista(char** palavras, size_t n) {
     }
 
     free((void*) palavras);
+}
+
+/*
+ * Implementação:
+ * - Função wrapper da remoção recursiva.
+ * - Considera que a raiz é um nó sentinela.
+ * - A árvore real começa em raiz->no_meio.
+ * - Ignora chamadas inválidas (NULL ou string vazia).
+ */
+void trie_remover(no_trie* raiz, const char* palavra) {
+    if (!raiz || !palavra || !*palavra) {
+        return;
+    }
+    raiz->no_meio = trie_remover_rec(raiz->no_meio, palavra);
 }
