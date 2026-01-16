@@ -35,4 +35,19 @@ dicionario* dicionario_criar();
  */
 void dicionario_destruir(dicionario* dicionario);
 
+/**
+ * @brief Lê linhas de um arquivo (função pública).
+ *
+ * Carrega todas as linhas do arquivo em um array dinâmico.
+ * Remove caractere newline das linhas.
+ * Ignora linhas vazias.
+ *
+ * @param caminho Caminho do arquivo a ser lido.
+ * @param quantidade Ponteiro para receber quantidade de linhas lidas.
+ *
+ * @return Array de strings com as linhas do arquivo, ou NULL em caso de
+ * falha. Deve ser liberado com trie_liberar_lista.
+ */
+char** dicionario_ler_arquivo(const char* caminho, size_t* quantidade);
+
 #endif
