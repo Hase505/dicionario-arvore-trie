@@ -24,7 +24,6 @@
 static char** ler_arquivo(const char* caminho, size_t* quantidade) {
     FILE* arquivo = fopen(caminho, "r");
     if (!arquivo) {
-        perror("ERRO fopen");
         if (quantidade) {
             *quantidade = 0;
         }
@@ -38,7 +37,6 @@ static char** ler_arquivo(const char* caminho, size_t* quantidade) {
 
     palavras = (char**) malloc(capacidade * sizeof(char*));
     if (!palavras) {
-        perror("ERRO malloc");
         fclose(arquivo);
         if (quantidade) {
             *quantidade = 0;
@@ -58,7 +56,6 @@ static char** ler_arquivo(const char* caminho, size_t* quantidade) {
             char** temp =
                 (char**) realloc((char*) palavras, capacidade * sizeof(char*));
             if (!temp) {
-                perror("ERRO realloc");
                 trie_liberar_lista(palavras, contador);
                 fclose(arquivo);
                 if (quantidade) {
@@ -71,7 +68,6 @@ static char** ler_arquivo(const char* caminho, size_t* quantidade) {
 
         palavras[contador] = string_dup(buffer);
         if (!palavras[contador]) {
-            perror("ERRO string_dup");
             trie_liberar_lista(palavras, contador);
             fclose(arquivo);
             if (quantidade) {
