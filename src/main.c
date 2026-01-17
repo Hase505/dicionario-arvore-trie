@@ -1,10 +1,27 @@
 #include <stddef.h>
 #include <stdio.h>
 
+#include "dicionario.h"
 #include "trie.h"
 
 int main() {
     no_trie* raiz = trie_criar();
+
+    // Teste: ler arquivo
+    size_t lidas = 0;
+    char** linhas = dicionario_ler_arquivo("teste.txt", &lidas);
+
+    if (linhas) {
+        printf("Arquivo lido: %zu linhas\n", lidas);
+        printf("Primeiras 5 linhas:\n");
+        for (size_t i = 0; i < lidas && i < 5; i++) {
+            printf("  %zu: %s\n", i + 1, linhas[i]);
+        }
+        printf("\n");
+        trie_liberar_lista(linhas, lidas);
+    } else {
+        printf("Erro ao ler arquivo\n\n");
+    }
 
     trie_inserir(raiz, "abacaxi");
     trie_inserir(raiz, "abertura");
