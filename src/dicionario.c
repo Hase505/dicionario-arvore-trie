@@ -90,6 +90,27 @@ static char** ler_arquivo(const char* caminho, size_t* quantidade) {
 
 /*
  * Implementação:
+ * - Realiza cópia da string informada.
+ * - Realiza trim da cópia.
+ * - Converte a cópia para minúsculo.
+ * - Verifica se a string final é uma palavra válida.
+ * - Se for válida, retorna string final; do contrário, retorna NULL.
+ */
+static char* normalizar_palavra(const char* palavra) {
+    char* palavra_normalizada = string_dup(palavra);
+
+    trim(palavra_normalizada);
+    string_para_minusculo(palavra_normalizada);
+    if (!palavra_valida(palavra_normalizada)) {
+        free(palavra_normalizada);
+        return NULL;
+    }
+
+    return palavra_normalizada;
+}
+
+/*
+ * Implementação:
  * - Aloca estrutura dicionario.
  * - Aloca estrutura trie.
  * - Define quantidade de palavras como 0.
@@ -126,6 +147,102 @@ void dicionario_destruir(dicionario* dicionario) {
     trie_destruir(dicionario->raiz);
     free(dicionario);
 }
+
 char** dicionario_ler_arquivo(const char* caminho, size_t* quantidade) {
     return ler_arquivo(caminho, quantidade);
+}
+
+/*
+ * Implementação:
+ * - Normaliza e valida palavra antes de inserir.
+ * - Insere na árvore trie.
+ * - Se inserção for válida, incrementa quantidade de palavras.
+ */
+bool dicionario_adicionar_palavra(dicionario* dicionario, const char* palavra) {
+    if (!dicionario || !palavra) {
+        return false;
+    }
+    bool inseriu = false;
+
+    char* palavra_normalizada = normalizar_palavra(palavra);
+    if (!palavra_normalizada) {
+        return inseriu;
+    }
+
+    if (trie_inserir(dicionario->raiz, palavra_normalizada)) {
+        dicionario->total_palavras++;
+        inseriu = true;
+    }
+
+    free(palavra_normalizada);
+    return inseriu;
+}
+
+/*
+ * Implementação:
+ * - Normaliza e valida palavra antes de remover.
+ * - Remove na árvore trie.
+ * - Se remoção for válida, decrementa quantidade de palavras.
+ */
+bool dicionario_remover_palavra(dicionario* dicionario, const char* palavra) {
+    if (!dicionario || !palavra) {
+        return false;
+    }
+
+    bool removeu = false;
+
+    char* palavra_normalizada = normalizar_palavra(palavra);
+    if (!palavra_normalizada) {
+        return removeu;
+    }
+
+    trim(palavra_normalizada);
+    string_para_minusculo(palavra_normalizada);
+    if (!palavra_valida(palavra_normalizada)) {
+        free(palavra_normalizada);
+        return removeu;
+    }
+
+    if (trie_remover(dicionario->raiz, palavra_normalizada)) {
+        dicionario->total_palavras--;
+        removeu = true;
+    }
+
+    free(palavra_normalizada);
+    return removeu;
+}
+
+/*
+ * Implementação:
+ * - Normaliza e valida palavra antes de buscar por prefixo.
+ * - Busca por prefixo na trie.
+ */
+char** dicionario_buscar_por_prefixo(dicionario* dicionario,
+                                     const char* prefixo,
+                                     size_t* quantidade) {
+    if (!dicionario) {
+        return NULL;
+    }
+
+    char* palavra_normalizada = normalizar_palavra(prefixo);
+    if (!palavra_normalizada) {
+        return NULL;
+    }
+
+    char** lista = trie_buscar_por_prefixo(
+        dicionario->raiz, palavra_normalizada, quantidade);
+
+    free(palavra_normalizada);
+    return lista;
+}
+
+/*
+ * Implementação:
+ * - Realiza listagem das palavras na trie.
+ */
+char** dicionario_listar_palavras(dicionario* dicionario, size_t* quantidade) {
+    if (!dicionario) {
+        return NULL;
+    }
+    return trie_listar_palavras(dicionario->raiz, quantidade);
 }

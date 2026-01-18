@@ -5,7 +5,7 @@
 #include "trie.h"
 
 int main() {
-    no_trie* raiz = trie_criar();
+    dicionario* dicionario = dicionario_criar();
 
     // Teste: ler arquivo
     size_t lidas = 0;
@@ -23,13 +23,13 @@ int main() {
         printf("Erro ao ler arquivo\n\n");
     }
 
-    trie_inserir(raiz, "abacaxi");
-    trie_inserir(raiz, "abertura");
-    trie_inserir(raiz, "romulo");
-    trie_inserir(raiz, "antedeguemon");
+    dicionario_adicionar_palavra(dicionario, "abacaxi");
+    dicionario_adicionar_palavra(dicionario, "abertura");
+    dicionario_adicionar_palavra(dicionario, "romulo");
+    dicionario_adicionar_palavra(dicionario, "antedeguemon");
 
     size_t quantidade = 0;
-    char** palavras = trie_listar_palavras(raiz, &quantidade);
+    char** palavras = trie_listar_palavras(dicionario->raiz, &quantidade);
 
     printf("Todas as palavras:\n");
     for (size_t i = 0; i < quantidade; i++) {
@@ -40,19 +40,9 @@ int main() {
     trie_liberar_lista(palavras, quantidade);
     quantidade = 0;
 
-    trie_remover(raiz, "abertura");
-    palavras = trie_listar_palavras(raiz, &quantidade);
+    printf("Quantidade de palavras: %zu\n\n", dicionario->total_palavras);
 
-    printf("Todas as palavras após remover 'abertura':\n");
-    for (size_t i = 0; i < quantidade; i++) {
-        printf("%s\n", palavras[i]);
-    }
-    printf("\n");
-
-    trie_liberar_lista(palavras, quantidade);
-    quantidade = 0;
-
-    palavras = trie_buscar_por_prefixo(raiz, "a", &quantidade);
+    palavras = dicionario_buscar_por_prefixo(dicionario, " A", &quantidade);
 
     printf("Todas as palavras após buscar por prefixo 'a':\n");
     for (size_t i = 0; i < quantidade; i++) {
@@ -61,7 +51,21 @@ int main() {
     printf("\n");
 
     trie_liberar_lista(palavras, quantidade);
-    trie_destruir(raiz);
+    quantidade = 0;
+
+    dicionario_remover_palavra(dicionario, "abacaxi");
+    palavras = trie_listar_palavras(dicionario->raiz, &quantidade);
+
+    printf("Todas as palavras após remover 'abacaxi':\n");
+    for (size_t i = 0; i < quantidade; i++) {
+        printf("%s\n", palavras[i]);
+    }
+    printf("\n");
+    printf("Quantidade de palavras: %zu\n\n", dicionario->total_palavras);
+
+    trie_liberar_lista(palavras, quantidade);
+
+    dicionario_destruir(dicionario);
 
     return 0;
 }
