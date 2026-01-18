@@ -125,7 +125,8 @@ static bool tst_coletar(no_trie* no,
  * - Insere caractere a caractere na Trie, utilizando nós esquerdos,
  *   direitos e do meio.
  */
-static no_trie* trie_inserir_rec(no_trie* no, const char* palavra) {
+static no_trie*
+trie_inserir_rec(no_trie* no, const char* palavra, bool* inseriu) {
     if (!no) {
         no = calloc(1, sizeof *no);
         if (!no) {
@@ -135,13 +136,13 @@ static no_trie* trie_inserir_rec(no_trie* no, const char* palavra) {
     }
 
     if (*palavra < no->caractere) {
-        no_trie* tmp = trie_inserir_rec(no->no_esquerdo, palavra);
+        no_trie* tmp = trie_inserir_rec(no->no_esquerdo, palavra, inseriu);
         if (!tmp) {
             return no;
         }
         no->no_esquerdo = tmp;
     } else if (*palavra > no->caractere) {
-        no_trie* tmp = trie_inserir_rec(no->no_direito, palavra);
+        no_trie* tmp = trie_inserir_rec(no->no_direito, palavra, inseriu);
         if (!tmp) {
             return no;
         }
@@ -149,8 +150,9 @@ static no_trie* trie_inserir_rec(no_trie* no, const char* palavra) {
     } else {
         if (*(palavra + 1) == '\0') {
             no->terminal = true;
+            *inseriu = true;
         } else {
-            no_trie* tmp = trie_inserir_rec(no->no_meio, palavra + 1);
+            no_trie* tmp = trie_inserir_rec(no->no_meio, palavra + 1, inseriu);
             if (!tmp) {
                 return no;
             }
@@ -184,19 +186,23 @@ static bool no_eh_removivel(const no_trie* no) {
  * - Na subida da recursão, remove nós inúteis (poda).
  * - Retorna o ponteiro atualizado da subárvore.
  */
-static no_trie* trie_remover_rec(no_trie* raiz, const char* palavra) {
+static no_trie*
+trie_remover_rec(no_trie* raiz, const char* palavra, bool* removeu) {
     if (raiz == NULL) {
         return NULL;
     }
     if (*palavra < raiz->caractere) {
-        raiz->no_esquerdo = trie_remover_rec(raiz->no_esquerdo, palavra);
+        raiz->no_esquerdo =
+            trie_remover_rec(raiz->no_esquerdo, palavra, removeu);
     } else if (*palavra > raiz->caractere) {
-        raiz->no_direito = trie_remover_rec(raiz->no_direito, palavra);
+        raiz->no_direito = trie_remover_rec(raiz->no_direito, palavra, removeu);
     } else {
         if (*(palavra + 1) == '\0') {
             raiz->terminal = false;
+            *removeu = true;
         } else {
-            raiz->no_meio = trie_remover_rec(raiz->no_meio, palavra + 1);
+            raiz->no_meio =
+                trie_remover_rec(raiz->no_meio, palavra + 1, removeu);
         }
     }
     if (no_eh_removivel(raiz)) {
@@ -241,13 +247,16 @@ void trie_destruir(no_trie* raiz) {
  * - Chama função interna trie_inserir_rec a partir do
  *   no_meio da raiz.
  */
-void trie_inserir(no_trie* raiz, const char* palavra) {
+bool trie_inserir(no_trie* raiz, const char* palavra) {
     if (!raiz || !palavra || !*palavra) {
-        return;
+        return false;
     }
 
+    bool inseriu = false;
     // Inserção sempre começa no filho do meio da raiz sentinela
-    raiz->no_meio = trie_inserir_rec(raiz->no_meio, palavra);
+    raiz->no_meio = trie_inserir_rec(raiz->no_meio, palavra, &inseriu);
+
+    return inseriu;
 }
 
 /*
@@ -366,9 +375,12 @@ void trie_liberar_lista(char** palavras, size_t n) {
  * - A árvore real começa em raiz->no_meio.
  * - Ignora chamadas inválidas (NULL ou string vazia).
  */
-void trie_remover(no_trie* raiz, const char* palavra) {
+bool trie_remover(no_trie* raiz, const char* palavra) {
     if (!raiz || !palavra || !*palavra) {
-        return;
+        return false;
     }
-    raiz->no_meio = trie_remover_rec(raiz->no_meio, palavra);
+    bool removeu = false;
+    raiz->no_meio = trie_remover_rec(raiz->no_meio, palavra, &removeu);
+
+    return removeu;
 }
