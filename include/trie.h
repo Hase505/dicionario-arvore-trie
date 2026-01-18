@@ -56,8 +56,10 @@ void trie_destruir(no_trie* raiz);
  *
  * @param raiz Ponteiro para a raiz da Trie.
  * @param palavra String a ser inserida na Trie.
+ *
+ * @return true se for inserido, false se não for inserido.
  */
-void trie_inserir(no_trie* raiz, const char* palavra);
+bool trie_inserir(no_trie* raiz, const char* palavra);
 
 /*
  * @brief Lista todas as palavras contidas na Trie informada.
@@ -104,7 +106,9 @@ void trie_liberar_lista(char** palavras, size_t n);
  *
  * @param raiz Ponteiro para a raiz (sentinela) da Trie.
  * @param palavra String contendo a palavra a ser removida.
+ *
+ * @return true se foi removido, false se não foi.
  */
-void trie_remover(no_trie* raiz, const char* palavra);
+bool trie_remover(no_trie* raiz, const char* palavra);
 
 #endif
