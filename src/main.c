@@ -8,20 +8,7 @@ int main() {
     dicionario* dicionario = dicionario_criar();
 
     // Teste: ler arquivo
-    size_t lidas = 0;
-    char** linhas = dicionario_ler_arquivo("teste.txt", &lidas);
-
-    if (linhas) {
-        printf("Arquivo lido: %zu linhas\n", lidas);
-        printf("Primeiras 5 linhas:\n");
-        for (size_t i = 0; i < lidas && i < 5; i++) {
-            printf("  %zu: %s\n", i + 1, linhas[i]);
-        }
-        printf("\n");
-        trie_liberar_lista(linhas, lidas);
-    } else {
-        printf("Erro ao ler arquivo\n\n");
-    }
+    dicionario_adicionar_de_arquivo(dicionario, "teste.txt");
 
     dicionario_adicionar_palavra(dicionario, "abacaxi");
     dicionario_adicionar_palavra(dicionario, "abertura");
@@ -62,6 +49,16 @@ int main() {
     }
     printf("\n");
     printf("Quantidade de palavras: %zu\n\n", dicionario->total_palavras);
+
+    trie_liberar_lista(palavras, quantidade);
+    quantidade = 0;
+
+    dicionario_remover_de_arquivo(dicionario, "teste.txt");
+    palavras = trie_listar_palavras(dicionario->raiz, &quantidade);
+    printf("Todas as palavras após remover do arquivo:\n");
+    for (size_t i = 0; i < quantidade; i++) {
+        printf("%s\n", palavras[i]);
+    }
 
     trie_liberar_lista(palavras, quantidade);
 

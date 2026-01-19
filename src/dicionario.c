@@ -7,6 +7,7 @@
 #include "trie.h"
 #include "util.h"
 
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -245,4 +246,56 @@ char** dicionario_listar_palavras(dicionario* dicionario, size_t* quantidade) {
         return NULL;
     }
     return trie_listar_palavras(dicionario->raiz, quantidade);
+}
+
+/*
+ * Implementação:
+ * - Lê todas as palavras que estão contidas no arquivo (1 por linha).
+ * - Adiciona as palavras que são válidas.
+ */
+// cppcheck-suppress constParameterPointer
+bool dicionario_adicionar_de_arquivo(dicionario* dicionario,
+                                     const char* caminho) {
+    if (!dicionario || !caminho) {
+        return false;
+    }
+
+    size_t quantidade = 0;
+    char** palavras = ler_arquivo(caminho, &quantidade);
+    if (!palavras) {
+        return false;
+    }
+
+    for (size_t i = 0; i < quantidade; i++) {
+        dicionario_adicionar_palavra(dicionario, palavras[i]);
+    }
+
+    trie_liberar_lista(palavras, quantidade);
+    return true;
+}
+
+/*
+ * Implementação:
+ * - Lê todas as palavras que estão contidas no arquivo (1 por linha).
+ * - Remove as palavras que são válidas.
+ */
+// cppcheck-suppress constParameterPointer
+bool dicionario_remover_de_arquivo(dicionario* dicionario,
+                                   const char* caminho) {
+    if (!dicionario || !caminho) {
+        return false;
+    }
+
+    size_t quantidade = 0;
+    char** palavras = ler_arquivo(caminho, &quantidade);
+    if (!palavras) {
+        return false;
+    }
+
+    for (size_t i = 0; i < quantidade; i++) {
+        dicionario_remover_palavra(dicionario, palavras[i]);
+    }
+
+    trie_liberar_lista(palavras, quantidade);
+    return true;
 }

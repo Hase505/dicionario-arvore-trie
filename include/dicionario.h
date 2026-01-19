@@ -35,21 +35,6 @@ dicionario* dicionario_criar();
  */
 void dicionario_destruir(dicionario* dicionario);
 
-/**
- * @brief Lê linhas de um arquivo (função pública).
- *
- * Carrega todas as linhas do arquivo em um array dinâmico.
- * Remove caractere newline das linhas.
- * Ignora linhas vazias.
- *
- * @param caminho Caminho do arquivo a ser lido.
- * @param quantidade Ponteiro para receber quantidade de linhas lidas.
- *
- * @return Array de strings com as linhas do arquivo, ou NULL em caso de
- * falha. Deve ser liberado com trie_liberar_lista.
- */
-char** dicionario_ler_arquivo(const char* caminho, size_t* quantidade);
-
 /*
  * @brief Adiciona palavra ao dicionário.
  *
@@ -102,5 +87,32 @@ char** dicionario_buscar_por_prefixo(dicionario* dicionario,
  * @return Array de strings armazenando as palavras encontradas.
  */
 char** dicionario_listar_palavras(dicionario* dicionario, size_t* quantidade);
+
+/*
+ * @brief Adiciona palavras contidas no arquivo informado.
+ *
+ * Lê o arquivo informado e adiciona as palavras que forem válidas.
+ * Deve haver uma palavra por linha apenas no arquivo.
+ *
+ * @param dicionario Ponteiro para o dicionário utilizado.
+ * @param caminho Caminho para o arquivo utilizado.
+ *
+ * @return true se foi possível abrir o arquivo, false se não.
+ */
+bool dicionario_adicionar_de_arquivo(dicionario* dicionario,
+                                     const char* caminho);
+
+/*
+ * @brief Remove palavras contidas no arquivo informado do dicionário.
+ *
+ * Lê o arquivo informado e remove as palavras que forem válidas.
+ * Deve haver uma palavra por linha apenas no arquivo.
+ *
+ * @param dicionario Ponteiro para o dicionário utilizado.
+ * @param caminho Caminho para o arquivo utilizado.
+ *
+ * @return true se foi possível abrir o arquivo, false se não.
+ */
+bool dicionario_remover_de_arquivo(dicionario* dicionario, const char* caminho);
 
 #endif
