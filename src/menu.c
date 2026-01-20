@@ -1,7 +1,9 @@
 #include "menu.h"
+
 #include "dicionario.h"
 #include "trie.h"
 #include "util.h"
+
 #include <ctype.h>
 #include <errno.h>
 #include <stddef.h>
@@ -11,6 +13,10 @@
 
 #define PATH_MAX 256
 
+/*
+ * Implementação:
+ * - Limpa o terminal do usuário de acordo com seu sistema operacional.
+ */
 void limpar_tela(void) {
 #ifdef _WIN32
     system("cls");
@@ -19,18 +25,35 @@ void limpar_tela(void) {
 #endif
 }
 
+/*
+ * Implementação:
+ * - Retorna o maior número informado.
+ */
 static size_t min(size_t a, size_t b) {
     return (a < b) ? a : b;
 }
+
+/*
+ * Implementação:
+ * - Espera a entrada de um caractere qualquer.
+ */
 static void aguardar_tela() {
     printf("Pressione qualquer tecla para continuar...\n");
     getchar();
 }
 
+/*
+ * Implementação:
+ * - Exibe banner padrão do programa.
+ */
 static void inicio_menu() {
     printf("--------------------DICIONARIO--------------------\n");
 }
 
+/*
+ * Implementação:
+ * - Exibe menu de opções disponíveis do programa.
+ */
 static void menu_exibir_opcoes() {
     printf("1 - Consultar palavra\n");
     printf("2 - Imprimir dicionário\n");
@@ -39,6 +62,10 @@ static void menu_exibir_opcoes() {
     printf("\n");
 }
 
+/*
+ * Implementação:
+ * - Realizar a leitura de um inteiro sem sinal (zero incluído).
+ */
 static int menu_ler_opcao(size_t* saida) {
     char buffer[64];
     char* endptr;
@@ -77,6 +104,11 @@ static int menu_ler_opcao(size_t* saida) {
     return 1; // sucesso
 }
 
+/*
+ * Implementação:
+ * - Solicita ao usuário o prefixo que deseja ser buscado.
+ * - Exibe na tela o máximo de 10 resultados.
+ */
 static void menu_consultar_prefixo(dicionario* dicionario) {
     char prefixo[PATH_MAX];
 
@@ -106,6 +138,11 @@ static void menu_consultar_prefixo(dicionario* dicionario) {
     aguardar_tela();
 }
 
+/*
+ * Implementação:
+ * - Exibe ao usuário todas as palavras contidas no dicionário,
+ *   sem limite de resultados.
+ */
 static void menu_imprimir_dicionario(dicionario* dicionario) {
     size_t quantidade = 0;
     char** palavras = dicionario_listar_palavras(dicionario, &quantidade);
@@ -130,6 +167,11 @@ static void menu_imprimir_dicionario(dicionario* dicionario) {
     aguardar_tela();
 }
 
+/*
+ * Implementação:
+ * - Solicita ao usuário o caminho para o arquivo de stopwords.
+ * - Remove todas as palavras do dicionário contidas no arquivo.
+ */
 void menu_carregar_arquivo_remocao(dicionario* dicionario) {
     char caminho[PATH_MAX];
 
@@ -156,6 +198,13 @@ void menu_carregar_arquivo_remocao(dicionario* dicionario) {
         aguardar_tela();
     }
 }
+
+/*
+ * Implementação:
+ * - Pede ao usuário o caminho para o arquivo inicial.
+ * - Cria dicionário.
+ * - Adiciona ao dicionário as palavras válidas contidas no arquivo.
+ */
 dicionario* menu_inicial(void) {
 
     char caminho[PATH_MAX];
@@ -191,6 +240,11 @@ dicionario* menu_inicial(void) {
     }
 }
 
+/*
+ * Implementação:
+ * - Exibe o menu de opções em loop.
+ * - Redireciona aos outros menus.
+ */
 void menu_principal(dicionario* d) {
     size_t opcao;
 
